@@ -17,3 +17,6 @@ npm run dev
   the result to demonstrate the data connection.
 
 More in the future...
+
+Credits :
+Noah Wilborn
