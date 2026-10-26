@@ -19,6 +19,7 @@ npm run dev
 More in the future...
 
 Credits :
-Noah Wilborn
-Andrew Tamez
-Bryce Spicer
+Noah Wilborn,
+Andrew Tamez,
+Bryce Spicer,
+Jacob Zimmerhanzel
