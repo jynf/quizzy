@@ -1,0 +1,20 @@
+import { NavLink } from 'react-router-dom'
+
+function Navbar() {
+  return (
+    <header>
+      <NavLink className="brand" to="/" end>
+        Quizzy
+      </NavLink>
+      <nav aria-label="Main navigation">
+        <NavLink to="/" end>
+          Home
+        </NavLink>
+        <NavLink to="/workspace">Workspace</NavLink>
+        <NavLink to="/about">About</NavLink>
+      </nav>
+    </header>
+  )
+}
+
+export default Navbar

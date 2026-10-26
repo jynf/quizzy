@@ -1,0 +1,57 @@
+header {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.brand {
+  margin-right: 2rem;
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+nav {
+  display: inline-flex;
+  gap: 1rem;
+}
+
+nav a {
+  color: inherit;
+}
+
+nav a.active {
+  font-weight: 700;
+}
+
+.page {
+  max-width: 800px;
+  min-height: 70vh;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page h1 {
+  margin-top: 0;
+}
+
+.question-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.question {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.message {
+  padding: 0.75rem;
+  background: #f1f1f1;
+}
+
+.error {
+  color: #a11;
+  background: #fff0f0;
+}

@@ -1,0 +1,14 @@
+{
+  "questions": [
+    {
+      "id": "question-1",
+      "category": "Corpus Christi",
+      "prompt": "Which body of water borders Corpus Christi?"
+    },
+    {
+      "id": "question-2",
+      "category": "TAMU-CC",
+      "prompt": "What is Texas A&M University-Corpus Christi's nickname?"
+    }
+  ]
+}
