@@ -1,6 +1,6 @@
 # Quizzy SPA foundation
 
-Minimal React single-page application for the COSC 3351 team project.
+Quizzy is a TAMUCC and Corpus Christi trivia game.
 
 ## Run locally
 
@@ -16,4 +16,4 @@ npm run dev
 - Workspace fetches `public/data/questions.json` in `useEffect` and displays
   the result to demonstrate the data connection.
 
-This is starter scaffolding, not the finished Quizzy game.
+More in the future...
