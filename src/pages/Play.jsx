@@ -12,15 +12,18 @@ function Play() {
   const [timeLeft, setTimeLeft] = useState(QUESTION_TIME)
   const [selectedChoiceId, setSelectedChoiceId] = useState(null)
   const [status, setStatus] = useState('playing')
+  const [lastAnswerCorrect, setLastAnswerCorrect] = useState(null)
+  const [answerError, setAnswerError] = useState('')
 
   useEffect(() => {
     const controller = new AbortController()
 
     async function loadQuestions() {
       try {
-        const response = await fetch('/data/questions.json', {
-          signal: controller.signal,
-        })
+        const response = await fetch(
+          '/api/question-sets/corpus-cc/questions',
+          { signal: controller.signal },
+        )
 
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`)
@@ -29,6 +32,7 @@ function Play() {
         const data = await response.json()
 
         const validQuestions =
+          data &&
           Array.isArray(data.questions) &&
           data.questions.every((question) =>
             question &&
@@ -40,9 +44,6 @@ function Play() {
               (choice) =>
                 typeof choice.id === 'string' &&
                 typeof choice.text === 'string',
-            ) &&
-            question.choices.some(
-              (choice) => choice.id === question.correctChoiceId,
             ),
           )
 
@@ -78,7 +79,6 @@ function Play() {
     }
 
     if (timeLeft === 0) {
-      setStatus('timedOut')
       return undefined
     }
 
@@ -89,16 +89,47 @@ function Play() {
     return () => window.clearTimeout(timerId)
   }, [loading, error, question, status, timeLeft])
 
-  function chooseAnswer(choiceId) {
-    if (status !== 'playing' || timeLeft === 0) {
-      return
-    }
+  async function chooseAnswer(choiceId) {
+    if (status !== 'playing' || timeLeft === 0) return
 
-    setSelectedChoiceId(choiceId)
-    setStatus('answered')
+    setStatus('submitting')
+    setAnswerError('')
 
-    if (choiceId === question.correctChoiceId) {
-      setScore((currentScore) => currentScore + 1)
+    try {
+      const response = await fetch(
+        `/api/questions/${encodeURIComponent(question.id)}/answers`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ choiceId }),
+        },
+      )
+
+      if (!response.ok) {
+        throw new Error(`Answer request failed with status ${response.status}`)
+      }
+
+      const result = await response.json()
+
+      if (typeof result.isCorrect !== 'boolean') {
+        throw new Error('The API returned an invalid answer result.')
+      }
+
+      setSelectedChoiceId(choiceId)
+      setLastAnswerCorrect(result.isCorrect)
+
+      if (result.isCorrect) {
+        setScore((currentScore) => currentScore + 1)
+      }
+
+      setStatus('answered')
+    } catch (requestError) {
+      setAnswerError(
+        requestError instanceof Error
+          ? requestError.message
+          : 'Could not submit your answer.',
+      )
+      setStatus('playing')
     }
   }
 
@@ -107,6 +138,8 @@ function Play() {
     setSelectedChoiceId(null)
     setTimeLeft(QUESTION_TIME)
     setStatus('playing')
+    setLastAnswerCorrect(null)
+    setAnswerError('')
   }
 
   function restartGame() {
@@ -115,6 +148,8 @@ function Play() {
     setSelectedChoiceId(null)
     setTimeLeft(QUESTION_TIME)
     setStatus('playing')
+    setLastAnswerCorrect(null)
+    setAnswerError('')
   }
 
   if (loading) {
@@ -147,10 +182,10 @@ function Play() {
     )
   }
 
-  const canContinue = status === 'answered' || status === 'timedOut'
-  const answeredCorrectly =
-    status === 'answered' &&
-    selectedChoiceId === question.correctChoiceId
+  const displayStatus =
+    status === 'playing' && timeLeft === 0 ? 'timedOut' : status
+  const canContinue =
+    displayStatus === 'answered' || displayStatus === 'timedOut'
 
   return (
     <section className="game">
@@ -160,12 +195,11 @@ function Play() {
 
       <div className="choices">
         {question.choices.map((choice) => {
-          const isCorrect = choice.id === question.correctChoiceId
           const isSelected = choice.id === selectedChoiceId
           const classNames = [
             'choice',
-            canContinue && isCorrect ? 'correct' : '',
-            isSelected && !isCorrect ? 'incorrect' : '',
+            isSelected && lastAnswerCorrect ? 'correct' : '',
+            isSelected && lastAnswerCorrect === false ? 'incorrect' : '',
           ].filter(Boolean).join(' ')
 
           return (
@@ -174,7 +208,7 @@ function Play() {
               type="button"
               key={choice.id}
               onClick={() => chooseAnswer(choice.id)}
-              disabled={status !== 'playing'}
+              disabled={displayStatus !== 'playing'}
             >
               {choice.text}
             </button>
@@ -182,15 +216,21 @@ function Play() {
         })}
       </div>
 
-      {status === 'answered' && (
+      {displayStatus === 'submitting' && (
+        <p role="status">Checking answer...</p>
+      )}
+
+      {answerError && (
+        <p className="message error" role="alert">{answerError}</p>
+      )}
+
+      {displayStatus === 'answered' && (
         <p role="status">
-          {answeredCorrectly ? 'Correct!' : 'Not quite.'}
+          {lastAnswerCorrect ? 'Correct!' : 'Not quite.'}
         </p>
       )}
 
-      {status === 'timedOut' && (
-        <p role="status">Time is up! The correct answer is highlighted.</p>
-      )}
+      {displayStatus === 'timedOut' && <p role="status">Time is up!</p>}
 
       {canContinue && (
         <button type="button" onClick={goToNextQuestion}>
