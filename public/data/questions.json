@@ -1,14 +1,28 @@
 {
   "questions": [
     {
-      "id": "question-1",
+      "id": "q1",
       "category": "Corpus Christi",
-      "prompt": "Which body of water borders Corpus Christi?"
+      "prompt": "Which body of water borders Corpus Christi?",
+      "choices": [
+        { "id": "a", "text": "Gulf of Mexico" },
+        { "id": "b", "text": "Pacific Ocean" },
+        { "id": "c", "text": "Atlantic Ocean" },
+        { "id": "d", "text": "Lake Superior" }
+      ],
+      "correctChoiceId": "a"
     },
     {
-      "id": "question-2",
+      "id": "q2",
       "category": "TAMU-CC",
-      "prompt": "What is Texas A&M University-Corpus Christi's nickname?"
+      "prompt": "What is Texas A&M University-Corpus Christi's nickname?",
+      "choices": [
+        { "id": "a", "text": "The Islanders" },
+        { "id": "b", "text": "The Longhorns" },
+        { "id": "c", "text": "The Roadrunners" },
+        { "id": "d", "text": "The Owls" }
+      ],
+      "correctChoiceId": "a"
     }
   ]
 }

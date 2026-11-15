@@ -1,9 +1,13 @@
+import { Link } from 'react-router-dom'
+
 function Home() {
   return (
     <section>
-      <h1>Home</h1>
-      <p>Welcome to the Quizzy React app foundation.</p>
-      <p>Use the navigation to visit the other example pages.</p>
+      <h1>Quizzy</h1>
+      <p>What do you know about TAMUCC?</p>
+      <Link className="button" to="/play">
+        Start Game
+      </Link>
     </section>
   )
 }

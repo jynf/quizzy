@@ -55,3 +55,38 @@ nav a.active {
   color: #a11;
   background: #fff0f0;
 }
+
+
+.button {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+  text-decoration: none;
+}
+
+.game {
+  display: grid;
+  gap: 1rem;
+}
+
+.choices {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.choice {
+  padding: 1rem;
+  text-align: left;
+}
+
+.choice.correct {
+  border-color: #16803c;
+  background: #e8f7ed;
+}
+
+.choice.incorrect {
+  border-color: #b42318;
+  background: #fff0ef;
+}
