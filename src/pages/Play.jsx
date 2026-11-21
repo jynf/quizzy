@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import QuizResults from '../components/QuizResults'
+import '../App.css'
 
 const QUESTION_TIME = 20
 
